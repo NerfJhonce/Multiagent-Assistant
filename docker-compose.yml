@@ -1,0 +1,60 @@
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: devagents-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_storage:/root/.ollama
+    networks:
+      - devagents-net
+    restart: unless-stopped
+
+  gateway:
+    build:
+      context: ./services/gateway
+    container_name: devagents-gateway
+    ports:
+      - "8000:8000"
+    environment:
+      - ORCHESTRATOR_URL=http://orchestrator:8001
+    networks:
+      - devagents-net
+    depends_on:
+      - orchestrator
+
+  orchestrator:
+    build:
+      context: ./services/orchestrator
+    container_name: devagents-orchestrator
+    ports:
+      - "8001:8001"
+    environment:
+      - LANGFUSE_PUBLIC_KEY=pk-lf-e7482024-a3da-46b7-9e54-ff0b4bccec00
+      - LANGFUSE_SECRET_KEY=sk-lf-b17c825b-d88a-4437-80b1-0291f2965d12
+      - LANGFUSE_HOST=https://cloud.langfuse.com
+    volumes:
+      - ./agents:/app/agents
+      - ./skills:/app/skills
+      - ./soul:/app/soul
+      - ./memory:/app/memory
+    networks:
+      - devagents-net
+
+  executor:
+    build:
+      context: ./services/executor
+    container_name: devagents-executor
+    ports:
+      - "8002:8002"
+    networks:
+      - devagents-net
+    restart: unless-stopped
+
+networks:
+  devagents-net:
+    driver: bridge
+
+volumes:
+  ollama_storage:

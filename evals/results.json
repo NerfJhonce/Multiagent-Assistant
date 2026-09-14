@@ -1,0 +1,30 @@
+{
+    "timestamp": "2026-09-14 13:37:46",
+    "summary": {
+        "total_tasks": 3,
+        "passed_tasks": 3,
+        "success_rate_pct": 100.0,
+        "avg_iterations": 1.0,
+        "avg_latency_sec": 83.37666666666667
+    },
+    "details": [
+        {
+            "id": "task_1",
+            "success": true,
+            "iterations": 1,
+            "latency": 73.04
+        },
+        {
+            "id": "task_2",
+            "success": true,
+            "iterations": 1,
+            "latency": 82.48
+        },
+        {
+            "id": "task_3",
+            "success": true,
+            "iterations": 1,
+            "latency": 94.61
+        }
+    ]
+}
