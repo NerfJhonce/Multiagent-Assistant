@@ -24,10 +24,10 @@ llm = ChatOllama(
 
 def load_file(path: str) -> str:
     try:
-        # Busca desde la raíz /app dentro del contenedor
+
         full_path = os.path.join("/app", path)
         if not os.path.exists(full_path):
-            # Fallback local por si ejecutas sin Docker
+
             base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
             full_path = os.path.join(base_dir, path)
 
@@ -37,7 +37,7 @@ def load_file(path: str) -> str:
         return ""
 
 
-# Cargar configuraciones del sistema
+
 SOUL_SECURITY = load_file("soul/security_guidelines.md")
 SKILL_PYTHON = load_file("skills/python_development.md")
 

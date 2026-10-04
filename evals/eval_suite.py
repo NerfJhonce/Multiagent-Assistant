@@ -9,23 +9,21 @@ GATEWAY_URL = "http://localhost:8000/task"
 EVAL_TASKS = [
     {
         "id": "task_1",
-        "description": "Crea una función para verificar si una palabra es un palíndromo.",
+        "description": "Create a function to check if a word is a palindrome.",
     },
     {
         "id": "task_2",
-        "description": "Crea una función que reciba una lista de números y devuelva solo los números pares.",
+        "description": "Create a function that receives a list of numbers and returns only even numbers.",
     },
     {
         "id": "task_3",
-        "description": "Escribe una función que calcule el factorial de un número entero positivo.",
+        "description": "Write a function that calculates the factorial of a positive integer.",
     }
 ]
 
 
 def run_evaluation():
-    print("==================================================")
-    print("INICIANDO EVALUACIÓN AUTOMATIZADA DE AGENTES")
-    print("==================================================\n")
+    print("INITIATING AUTOMATED ASSESSMENT OF AGENTS")
 
     results = []
     total_start_time = time.time()
@@ -39,7 +37,7 @@ def run_evaluation():
                 GATEWAY_URL,
                 json={"task": item["description"]},
                 headers={"Content-Type": "application/json"},
-                timeout=240  # Aumentado a 4 minutos para LLM local
+                timeout=240  # Increased to 4 minutes for local LLM
             )
             elapsed = round(time.time() - start_time, 2)
 
@@ -55,37 +53,35 @@ def run_evaluation():
                     "latency": elapsed
                 })
                 print(
-                    f"  └─ status: {'APPROVED ✅' if is_approved else 'FAILED ❌'} | iterations: {iterations} | time: {elapsed}s\n")
+                    f"  └─ status: {'APPROVED' if is_approved else 'FAILED '} | iterations: {iterations} | time: {elapsed}s\n")
             else:
                 print(f"  └─ Error HTTP {response.status_code}\n")
                 results.append({"id": item["id"], "success": False, "iterations": 0, "latency": elapsed})
 
         except requests.exceptions.Timeout:
             elapsed = round(time.time() - start_time, 2)
-            print(f"  └─ Error: Timeout (Superó los 240s)\n")
+            print(f"  └─ Error: Timeout (Exceeded the 240s)\n")
             results.append({"id": item["id"], "success": False, "iterations": 0, "latency": elapsed})
         except Exception as e:
             elapsed = round(time.time() - start_time, 2)
-            print(f"  └─ Error de conexión: {e}\n")
+            print(f"  └─ Connection Error: {e}\n")
             results.append({"id": item["id"], "success": False, "iterations": 0, "latency": elapsed})
 
-    # Cálculo de métricas agregadas
+    # Aggregate Metric Calculation
     total_tasks = len(results)
     passed_tasks = sum(1 for r in results if r["success"])
     success_rate = (passed_tasks / total_tasks) * 100 if total_tasks > 0 else 0
     avg_iterations = sum(r["iterations"] for r in results) / total_tasks if total_tasks > 0 else 0
     avg_latency = sum(r["latency"] for r in results) / total_tasks if total_tasks > 0 else 0
 
-    print("==================================================")
-    print("RESUMEN DE EVALUACIÓN")
-    print("==================================================")
-    print(f" Tareas Totales:        {total_tasks}")
-    print(f" Tareas Exitosas:       {passed_tasks} / {total_tasks}")
+    print("Evaluation summary")
+    print(f" Total tasks:        {total_tasks}")
+    print(f" Successful Tasks:       {passed_tasks} / {total_tasks}")
     print(f" Task Success Rate:     {success_rate:.1f}%")
-    print(f" Promedio Iteraciones:  {avg_iterations:.2f}")
-    print(f" Latencia Promedio:     {avg_latency:.2f}s")
-    print(f" Tiempo Total Suite:    {round(time.time() - total_start_time, 2)}s")
-    print("==================================================\n")
+    print(f" Average Iterations:  {avg_iterations:.2f}")
+    print(f" Average latency:     {avg_latency:.2f}s")
+    print(f" Total Suite Time:    {round(time.time() - total_start_time, 2)}s")
+
 
     os.makedirs("evals", exist_ok=True)
     report = {
@@ -103,7 +99,7 @@ def run_evaluation():
     with open("evals/results.json", "w", encoding="utf-8") as f:
         json.dump(report, f, indent=4)
 
-    print("Reporte de evaluación guardado en evals/results.json")
+    print("Evaluation report saved in evals/results.json")
 
 
 if __name__ == "__main__":

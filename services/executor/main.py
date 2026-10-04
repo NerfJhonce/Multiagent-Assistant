@@ -15,7 +15,7 @@ def health_check():
 @app.post("/run")
 def run_code(request: ExecutionRequest):
     try:
-        # Ejecución aislada en subproceso con tiempo límite (10s)
+
         result = subprocess.run(
             [sys.executable, "-c", request.code],
             capture_output=True,

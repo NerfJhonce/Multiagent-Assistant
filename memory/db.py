@@ -6,7 +6,7 @@ DB_PATH = os.path.join(os.path.dirname(__file__), "agent_memory.db")
 
 
 def init_db():
-    """Inicializa la tabla de memoria si no existe."""
+
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("""
@@ -24,7 +24,7 @@ def init_db():
 
 
 def save_task_memory(task: str, plan: str, code: str, is_approved: bool):
-    """Guarda el resultado de una tarea en la base de datos de memoria."""
+
     init_db()
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -37,7 +37,7 @@ def save_task_memory(task: str, plan: str, code: str, is_approved: bool):
 
 
 def get_recent_history(limit: int = 3) -> List[Dict[str, Any]]:
-    """Obtiene el historial reciente de tareas ejecutadas."""
+
     init_db()
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
